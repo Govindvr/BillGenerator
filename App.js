@@ -8,7 +8,6 @@ import ViewOldBills from './app/screens/ViewOldBills';
 const Stack = createStackNavigator();
 
 export default function App() {
-  const ButtonPress = () => alert("Button Pressed");
   return (
     <NavigationContainer>
       <Stack.Navigator>
