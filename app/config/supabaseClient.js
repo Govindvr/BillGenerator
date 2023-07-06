@@ -58,7 +58,73 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
       return null;
     }
   }
+
+  async function getBills() {
+      
+      try {
+        const { data, error } = await supabase
+          .from('bill')
+          .select('id, customer_name, grand_total, date')
+          .order('date', { ascending: false });
+    
+        if (error) {
+          
+          console.error('Error fetching bills:', error);
+          return null;
+        }
+    
+        if (data && data.length > 0) {
   
-  export { getLastInvoiceNumber };
+          return data;
+        }
+    
+        return null;
+      } catch (error) {
+          
+        console.error('Error fetching bills:', error);
+        return null;
+      }
+  }
+
+  async function getBill(id) {
+
+    try {
+      const { data, error } = await supabase
+        .from('bill')
+        .select(`
+          *,
+          billitems:billitems (product_id, product:products (product_name, gst_rate, unit, hsn_sac), quantity, pregstprice,unitprice, item_total, disc)
+        `)
+        .eq('id', id);
+  
+      if (error) {
+        console.error('Error fetching bill details:', error);
+        return null;
+      }
+  
+      if (data && data.length > 0) {
+        const bill = data[0];
+        const products = bill.billitems.map(item => ({
+          product_name: item.product.product_name,
+          hsn_sac: item.product.hsn_sac,
+          gst_rate: item.product.gst_rate,
+          quantity: item.quantity,
+          unitprice: item.unitprice,
+          unit: item.product.unit,
+          disc: item.disc,
+          item_total: item.pregstprice,
+        }));
+  
+        return { bill, products };
+      }
+  
+      return null;
+    } catch (error) {
+      console.error('Error fetching bill details:', error);
+      return null;
+    }
+  }
+  
+  export { getLastInvoiceNumber, getBills, getBill };
   export default supabase;
   

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MainButton from './mainButton';
-const Card = ({ date,customerName,amount }) => {
+
+const Card = ({ date,customerName,amount,onPressButton }) => {
   return (
     <View style={styles.card}>
         <View style={styles.cardText1}>
@@ -12,7 +13,7 @@ const Card = ({ date,customerName,amount }) => {
          <Text style={styles.customerName}>{customerName}</Text>
       </View>
       <View style={styles.cardText2}>
-        <MainButton onPress={()=>{console.log("View pressed")}} title="View Bill"/>
+        <MainButton title="View Bill" onPress={onPressButton} />
       </View>
     </View>
   );
