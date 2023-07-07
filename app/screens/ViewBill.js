@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput,ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Linking,ScrollView } from 'react-native';
 import { getBill } from '../config/supabaseClient';
+import OpenLinkButton from '../components/printButton';
 
 function ViewBill({ route }) {
 
@@ -128,6 +129,8 @@ function ViewBill({ route }) {
             
         </View>
       ))}
+      <OpenLinkButton url="https://docs.google.com/spreadsheets/d/1czE1-2jvlOsDIBBcXHaN4zF3-WeWkHbwRumcuDNcFYc/export?format=pdf&portrait=true&size=A4" />
+
     </ScrollView>
   );
 }
