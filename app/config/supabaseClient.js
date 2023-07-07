@@ -48,7 +48,7 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
   
       if (data && data.length > 0) {
 
-        return data[0].invoice_number.toString();
+        return data[0].invoice_number;
       }
   
       return null;
@@ -125,6 +125,31 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
     }
   }
   
-  export { getLastInvoiceNumber, getBills, getBill };
+  async function getProducts() {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('product_name', { ascending: true });
+  
+      if (error) {
+        console.error('Error fetching products:', error);
+        return null;
+      }
+  
+      if (data && data.length > 0) {
+        return data;
+      }
+  
+      return null;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return null;
+    }
+  }
+
+  async function saveInvoiceToDb(invoice) {
+  }
+  export { getLastInvoiceNumber, getBills, getBill, getProducts };
   export default supabase;
   

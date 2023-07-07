@@ -18,3 +18,5 @@ web-build/
 .metro-health-check*
 
 .vscode
+
+service_account_credentials.json
