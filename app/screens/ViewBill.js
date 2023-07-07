@@ -72,8 +72,8 @@ function ViewBill({ route }) {
       </View>
 
       <View style={styles.row}> 
-        <Text style={styles.label}>IGST:</Text>
-        <Text style={styles.text}>{bill.igst}</Text>
+        <Text style={styles.label}>SGST:</Text>
+        <Text style={styles.text}>{bill.sgst}</Text>
       </View>
 
       <View style={styles.row}> 
