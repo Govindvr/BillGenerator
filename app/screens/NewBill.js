@@ -28,11 +28,11 @@ import { Dropdown } from 'react-native-element-dropdown';
     const [customerGst, setCustomerGst] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     const [products, setProducts] = useState([{ serial: '1', name: '', hsn: '', gst: '', quantity: '', unit: '',gst_rate: '', rate: '', disc: '0', amount: '',product_id: '' }]);
-    const [total, setTotal] = useState(0);
-    const [cgst, setCgst] = useState(0);
-    const [sgst, setSgst] = useState(0);
-    const [igst, setIgst] = useState(0);
-    const [grandTotal, setGrandTotal] = useState(0);
+    const [total, setTotal] = useState('0');
+    const [cgst, setCgst] = useState('0');
+    const [sgst, setSgst] = useState('0');
+    const [igst, setIgst] = useState('0');
+    const [grandTotal, setGrandTotal] = useState('0');
 
     const [showErrorModal, setShowErrorModal] = useState(false);
     
@@ -245,6 +245,7 @@ import { Dropdown } from 'react-native-element-dropdown';
                 style={styles.biginput}
                 value={billingAddress}
                 placeholder='Enter Billing Address'
+                multiline={true}
                 onChangeText={handleBillingAddressChange}
                 />
             </View>
@@ -258,6 +259,7 @@ import { Dropdown } from 'react-native-element-dropdown';
                 style={styles.biginput}
                 value={shippingAddress}
                 placeholder='Enter Shipping Address'
+                multiline={true}
                 onChangeText={handleShippingAddressChange}
                 />
             </View>
