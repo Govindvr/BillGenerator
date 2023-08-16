@@ -149,7 +149,90 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
   }
 
   async function saveInvoiceToDb(invoice) {
+    bill_details = {
+      invoice_number: parseInt(invoice.invoice_number),
+      date: invoice.date.split("-").reverse().join("-"),
+      customer_name: invoice.customer_name,
+      billing_address: invoice.billing_address,
+      shipping_address: invoice.shipping_address,
+      customer_gst: invoice.customer_gst,
+      customer_phone: invoice.customer_phone,
+      total: parseFloat(invoice.total),
+      cgst: parseFloat(invoice.cgst),
+      sgst: parseFloat(invoice.sgst),
+      grand_total: parseFloat(invoice.grand_total),
+
+    };
+    var bill_id;
+    try{
+      const { data, error } = await supabase
+        .from('bill')
+        .insert(bill_details)
+        .select();
+
+      bill_id = data[0].id;
+      
+      if (error) {
+        console.error('Error saving invoice:', error);
+        return { "error": error.message};
+      }
+
+
+    } catch (error) {
+      console.error('Error saving bill:', error);
+      return { "error": error.message};
+    }
+
+    try{
+  
+      const bill_items = invoice.products.map((product) => {
+        return {
+          bill_id: bill_id,
+          product_id: parseInt(product.product_id),
+          quantity: parseInt(product.quantity),
+          pregstprice: parseFloat(product.amount),
+          item_total: parseFloat(product.item_total), 
+          gstunitprice: parseFloat(product.gst_rate),
+          disc: parseFloat(product.disc),
+          unitprice: parseFloat(product.rate),
+
+        }
+      });
+
+      const { data, error } = await supabase
+        .from('billitems')
+        .insert(bill_items)
+        .select();
+      
+      return { "status": "sucess", "bill_id": bill_id};
+    } catch (error) {
+      console.error('Error saving invoice:', error);
+      const { error_delete } = await supabase
+        .from('bill')
+        .delete()
+        .eq('id', bill_id);
+      return { "status": "error"};
+
+    }
+
+
   }
-  export { getLastInvoiceNumber, getBills, getBill, getProducts };
+  export { getLastInvoiceNumber, getBills, getBill, getProducts, saveInvoiceToDb };
   export default supabase;
   
+
+//   {
+//     invoice_number: invoiceNumber,
+//     date: date,
+//     customer_name: customerName,
+//     billing_address: billingAddress,
+//     shipping_address: shippingAddress,
+//     customer_gst: customerGst,
+//     customer_phone: customerPhone,
+//     total: total,
+//     cgst: cgst,
+//     sgst: sgst,
+//     igst: igst,
+//     grand_total: grandTotal,
+//     products: products
+// };
