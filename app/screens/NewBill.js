@@ -13,7 +13,7 @@ import { Dropdown } from 'react-native-element-dropdown';
     return `${day}-${month}-${year}`;
   }
   
-  function NewBill() {
+  function NewBill({navigation}) {
 
     const [productList, setProductList] = useState([]);
     
@@ -27,7 +27,7 @@ import { Dropdown } from 'react-native-element-dropdown';
     const [shippingAddress, setShippingAddress] = useState('');
     const [customerGst, setCustomerGst] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
-    const [products, setProducts] = useState([{ serial: '1', name: '', hsn: '', gst: '', quantity: '', unit: '',gst_rate: '', rate: '', disc: '0', amount: '',product_id: '' }]);
+    const [products, setProducts] = useState([{ serial: '1', name: '', hsn: '', gst: '', quantity: '', unit: '',gst_rate: '', rate: '', disc: '0', amount: '',product_id: '',item_total:'' }]);
     const [total, setTotal] = useState('0');
     const [cgst, setCgst] = useState('0');
     const [sgst, setSgst] = useState('0');
@@ -36,6 +36,10 @@ import { Dropdown } from 'react-native-element-dropdown';
 
     const [showErrorModal, setShowErrorModal] = useState(false);
     
+    const handleViewBill = (billId) => {
+      navigation.replace('ViewOldBills');
+      navigation.navigate('ViewBill', { billId: billId });
+    };
 
     useEffect(() => {
       fetchInvoiceNumber();
@@ -95,6 +99,7 @@ import { Dropdown } from 'react-native-element-dropdown';
         const total = (rate * quantity).toFixed(2);
         const discAmount = ((total * disc) / 100).toFixed(2);
         updatedProducts[index].amount = (total - discAmount).toFixed(2).toString();
+        updatedProducts[index].item_total = parseFloat(updatedProducts[index].amount) + parseFloat(updatedProducts[index].amount)*(gst/100);
         setProducts(updatedProducts);
     }
     const handleProductFieldChange = (index, field, value) => {
@@ -115,7 +120,7 @@ import { Dropdown } from 'react-native-element-dropdown';
     
     const addProduct = () => {
         const newSerial = (products.length + 1).toString();
-        const newProduct = { serial: newSerial, name: '', hsn: '', gst: '', quantity: '', unit: '',gst_rate: '', rate: '', disc: '0', amount: '' , product_id: ''};
+        const newProduct = { serial: newSerial, name: '', hsn: '', gst: '', quantity: '', unit: '',gst_rate: '', rate: '', disc: '0', amount: '' , product_id: '', item_total:''};
         setProducts(prevProducts => [...prevProducts, newProduct]);
     };
 
@@ -168,7 +173,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 
     };
 
-    function saveInvoice(){
+    async function saveInvoice(){
         let isValid = true;
 
         if (customerName.trim() === '' ||
@@ -197,7 +202,15 @@ import { Dropdown } from 'react-native-element-dropdown';
                 grand_total: grandTotal,
                 products: products
             };
-            saveInvoiceToDb(invoice);
+            const resp = await saveInvoiceToDb(invoice);
+
+            if (resp.status == "sucess") {
+              handleViewBill(resp.bill_id);
+            }
+            else {
+              setShowErrorModal(true);
+            }
+
         } else {
         setShowErrorModal(true);
         }
@@ -269,7 +282,7 @@ import { Dropdown } from 'react-native-element-dropdown';
                 <TextInput
                 style={styles.input}
                 value={customerGst}
-                placeholder='Enter Customer Name'
+                placeholder='Enter GSTIN'
                 onChangeText={handleCustomerGstChange}
                 />
             </View>
@@ -279,7 +292,8 @@ import { Dropdown } from 'react-native-element-dropdown';
                 <TextInput
                 style={styles.input}
                 value={customerPhone}
-                placeholder='Enter Customer Name'
+                placeholder='Enter Customer Phone'
+                inputMode='numeric'
                 onChangeText={handleCustomerPhoneChange}
                 />
             </View>
