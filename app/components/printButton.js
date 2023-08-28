@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Linking, View } from 'react-native';
 
-const OpenLinkButton = ({ url }) => {
+const OpenLinkButton = ({ url,handleFunction }) => {
   const handlePress = () => {
+    handleFunction();
     Linking.openURL(url);
   };
 
