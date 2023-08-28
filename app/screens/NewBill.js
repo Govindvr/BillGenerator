@@ -4,6 +4,8 @@ import { useState,useEffect } from 'react';
 import {getLastInvoiceNumber} from '../config/supabaseClient';
 import { getProducts, saveInvoiceToDb } from '../config/supabaseClient';
 import { Dropdown } from 'react-native-element-dropdown';
+import ErrorModal from '../components/errorModal';
+
 
   function getCurrentDate() {
     const date = new Date();
@@ -466,17 +468,10 @@ import { Dropdown } from 'react-native-element-dropdown';
                     />
             </View>
 
-
-            <Modal visible={showErrorModal} animationType="fade" transparent>
-                <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>Please fill in all required fields</Text>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setShowErrorModal(false)}>
-                    <Text style={styles.modalButtonText}>OK</Text>
-                    </TouchableOpacity>
-                </View>
-                </View>
-            </Modal>
+            <ErrorModal visible={showErrorModal} 
+                      message={"Please fill in all required fields"}
+                      onClose={() => setShowErrorModal(false)} 
+          />
             <TouchableOpacity style={styles.saveButton} onPress={saveInvoice}>
                 <Text style={styles.addProductButtonText}>Generate Bill</Text>
             </TouchableOpacity>
@@ -654,31 +649,6 @@ const styles = StyleSheet.create({
         color: 'red',
         marginBottom: 8,
       },
-      modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContent: {
-        backgroundColor: 'white',
-        padding: 16,
-        borderRadius: 8,
-        alignItems: 'center',
-      },
-      modalText: {
-        fontSize: 16,
-        marginBottom: 16,
-      },
-      modalButton: {
-        backgroundColor: colors.secondary,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 4,
-      },
-      modalButtonText: {
-        color: 'white',
-        fontSize: 16,
-      },
+
 });
 export default NewBill;
