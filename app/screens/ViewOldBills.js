@@ -3,25 +3,42 @@ import colors from '../config/colors';
 import Card from '../components/card';
 import { getBills } from '../config/supabaseClient';
 import React, { useState, useEffect } from 'react';
+import ErrorModal from '../components/errorModal';
 
 
 function ViewOldBills({navigation}) {
+      const [showErrorModal, setShowErrorModal] = useState(false);
 
       const handleViewBill = (billId) => {
         navigation.navigate('ViewBill', { billId: billId });
       };
+      
+      const goHome = () => {
+        setShowErrorModal(false);
+        navigation.navigate('Home');
+      }
+      
       const [bills, setBills] = useState([]);
       useEffect(() => {
         fetchBills();
       }, []);
+
       
       async function fetchBills() {
-        const billsData = await getBills();
-        if (billsData) {
-          setBills(billsData);
+        try {
+          const billsData = await getBills();
+          if (billsData) {
+            setBills(billsData);
+          }
+          else
+          {
+            setShowErrorModal(true);
+          }
+        } catch (error) {
+          setShowErrorModal(true);
         }
       }
-      // Repeat the card items for 10 times
+
    
     return (
         <SafeAreaView style={styles.container}>
@@ -38,6 +55,10 @@ function ViewOldBills({navigation}) {
                 }}/>
         )}
         />
+         <ErrorModal visible={showErrorModal} 
+                      message={"Error recovering Data\nContact the Developer"}
+                      onClose={goHome} 
+          />
         </SafeAreaView>
     );
 }
