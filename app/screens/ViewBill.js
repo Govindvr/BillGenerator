@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Linking,ScrollView } from 'react-native';
 import { getBill } from '../config/supabaseClient';
 import OpenLinkButton from '../components/printButton';
+import { API_URL } from '@env';
+
+
+const url=API_URL;
 
 function ViewBill({ route }) {
 
@@ -29,6 +33,35 @@ function ViewBill({ route }) {
     );
   }
 
+  const handlePrintBill = async () => {
+    delete bill.billitems;
+    req_body = {
+      "bill": bill,
+      "products": products
+    }
+    const uri = "https://gst-bill-backend.onrender.com/" + "api/sheets/setdata";
+    try {
+      const response = await fetch(uri, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req_body),
+      });
+
+
+      if(response.status != 201)
+      {
+        console.log(response.status);
+        console.log(response.statusText);
+        console.log(response);
+        return;
+      }
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Bill Details</Text>
@@ -129,7 +162,10 @@ function ViewBill({ route }) {
             
         </View>
       ))}
-      <OpenLinkButton url="https://docs.google.com/spreadsheets/d/1czE1-2jvlOsDIBBcXHaN4zF3-WeWkHbwRumcuDNcFYc/export?format=pdf&portrait=true&size=A4" />
+      <OpenLinkButton 
+        url="https://docs.google.com/spreadsheets/d/1czE1-2jvlOsDIBBcXHaN4zF3-WeWkHbwRumcuDNcFYc/export?format=pdf&portrait=true&size=A4" 
+        handleFunction={handlePrintBill}
+      />
 
     </ScrollView>
   );
