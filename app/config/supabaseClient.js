@@ -2,7 +2,6 @@ import React from "react";
 import 'react-native-url-polyfill/auto'
 import { createClient } from '@supabase/supabase-js'
 import {REACT_NATIVE_SUPABASE_URL, REACT_NATIVE_ANON_KEY } from '@env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as SecureStore from 'expo-secure-store'
 
@@ -69,7 +68,7 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
     
         if (error) {
           
-          console.error('Error fetching bills:', error);
+          // console.error('Error fetching bills:', error);
           return null;
         }
     
@@ -81,7 +80,7 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
         return null;
       } catch (error) {
           
-        console.error('Error fetching bills:', error);
+        // console.error('Error fetching bills:', error);
         return null;
       }
   }
@@ -219,20 +218,3 @@ const supabaseKey = REACT_NATIVE_ANON_KEY;
   }
   export { getLastInvoiceNumber, getBills, getBill, getProducts, saveInvoiceToDb };
   export default supabase;
-  
-
-//   {
-//     invoice_number: invoiceNumber,
-//     date: date,
-//     customer_name: customerName,
-//     billing_address: billingAddress,
-//     shipping_address: shippingAddress,
-//     customer_gst: customerGst,
-//     customer_phone: customerPhone,
-//     total: total,
-//     cgst: cgst,
-//     sgst: sgst,
-//     igst: igst,
-//     grand_total: grandTotal,
-//     products: products
-// };
