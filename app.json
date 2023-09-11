@@ -4,7 +4,7 @@
     "slug": "BillGenerator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./app/assets/icon.png",
+    "icon": "./app/assets/olga-logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./app/assets/splash.png",
@@ -19,12 +19,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/adaptive-icon.png",
+        "foregroundImage": "./app/assets/olga-logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.govindvr.BillGenerator"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bc75ba3f-b755-4ac1-a7ea-e05bd5b7aef2"
+      }
     }
   }
 }
