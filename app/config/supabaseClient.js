@@ -1,7 +1,6 @@
 import React from "react";
 import 'react-native-url-polyfill/auto'
 import { createClient } from '@supabase/supabase-js'
-import {REACT_NATIVE_SUPABASE_URL, REACT_NATIVE_ANON_KEY } from '@env';
 
 import * as SecureStore from 'expo-secure-store'
 
@@ -19,8 +18,8 @@ const ExpoSecureStoreAdapter = {
 
 
 // Use the environment variables
-const supabaseUrl = REACT_NATIVE_SUPABASE_URL;
-const supabaseKey = REACT_NATIVE_ANON_KEY;
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.EXPO_PUBLIC_ANON_KEY;
   
   // Create the Supabase client with the storage option
   const supabase = createClient(supabaseUrl, supabaseKey, {  auth: {
