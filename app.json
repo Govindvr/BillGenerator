@@ -1,36 +1,4 @@
 {
-  "expo": {
-    "name": "BillGenerator",
-    "slug": "BillGenerator",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./app/assets/olga-logo.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./app/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./app/assets/olga-logo.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.govindvr.BillGenerator"
-    },
-    "web": {
-      "favicon": "./app/assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "74b7647b-9b0a-439d-aae2-3a34718f1863"
-      }
-    }
-  }
+  "name": "Olga Bill",
+  "displayName": "Olga Bill"
 }
