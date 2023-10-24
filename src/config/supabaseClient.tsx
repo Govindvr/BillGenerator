@@ -44,7 +44,7 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
         .from('bill')
         .select('invoice_number')
         .limit(1)
-        .order('invoice_number', { ascending: false });
+        .order('date', { ascending: false });
   
       if (error) {
         
