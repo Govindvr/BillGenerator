@@ -112,7 +112,7 @@ import ErrorModal from '../components/errorModal';
         if (field === "gst_rate") {
           const gstRate = parseFloat(value);
           const gst = parseFloat(updatedProducts[index].gst)
-          updatedProducts[index].rate = (gstRate*100/(100+gst)).toFixed(2).toString();
+          updatedProducts[index].rate = (gstRate*100/(100+gst)).toFixed(3).toString();
           
         }
         setProducts(updatedProducts);
@@ -149,7 +149,7 @@ import ErrorModal from '../components/errorModal';
           const gstRate = parseFloat(selectedProduct.gst_rate);
           const unitPrice = parseFloat(selectedProduct.unitprice);
 
-          updatedProducts[index].gst_rate = (unitPrice+  unitPrice*(gstRate/(100))).toString(); 
+          updatedProducts[index].gst_rate = (unitPrice+  unitPrice*(gstRate/(100))).toFixed(3).toString(); 
 
           setProducts(updatedProducts);
         }
@@ -547,6 +547,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingTop: 15,
         textAlignVertical: 'top',
+        color: 'black',
       },
     row: {
         flexDirection: 'column',
