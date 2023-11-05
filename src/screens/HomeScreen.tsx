@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import React from 'react';
+import testServer from '../config/test';
 import { 
     SafeAreaView,
     View,
@@ -15,6 +16,7 @@ import colors from '../config/colors';
 function HomeScreen({navigation}) {
     const handleNewBill = () => navigation.navigate('NewBill');
     const handleViewOldBill = () => navigation.navigate('ViewOldBills');
+    testServer();
     return (
         <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>

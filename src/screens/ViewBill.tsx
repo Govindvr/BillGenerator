@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Linking,ScrollView } from 'react-native';
 import { getBill } from '../config/supabaseClient';
 import OpenLinkButton from '../components/printButton';
+import testServer from '../config/test';
 
 function ViewBill({ route }) {
 
@@ -60,6 +61,7 @@ function ViewBill({ route }) {
       console.error('Error sending request:', error);
     }
   }
+  testServer();
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Bill Details</Text>

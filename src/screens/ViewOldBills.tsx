@@ -6,6 +6,7 @@ import Card from '../components/card';
 import { getBills } from '../config/supabaseClient';
 import React, { useState, useEffect } from 'react';
 import ErrorModal from '../components/errorModal';
+import testServer from '../config/test';
 
 
 function ViewOldBills({navigation}) {
@@ -41,7 +42,7 @@ function ViewOldBills({navigation}) {
         }
       }
 
-   
+    testServer();
     return (
         <SafeAreaView style={styles.container}>
         <FlatList
