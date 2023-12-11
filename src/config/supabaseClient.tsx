@@ -71,7 +71,7 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
       try {
         const { data, error } = await supabase
           .from('bill')
-          .select('id, customer_name, grand_total, date')
+          .select('id, customer_name, grand_total, date, invoice_number')
           .order('date', { ascending: false })
           .order('invoice_number', {ascending: false});
 
