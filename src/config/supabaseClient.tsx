@@ -44,7 +44,8 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
         .from('bill')
         .select('invoice_number')
         .limit(1)
-        .order('date', { ascending: false });
+        .order('date', { ascending: false })
+        .order('invoice_number', {ascending: false});
   
       if (error) {
         
@@ -71,7 +72,10 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
         const { data, error } = await supabase
           .from('bill')
           .select('id, customer_name, grand_total, date')
-          .order('date', { ascending: false });
+          .order('date', { ascending: false })
+          .order('invoice_number', {ascending: false});
+
+
     
         if (error) {
           
@@ -166,6 +170,7 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
       total: parseFloat(invoice.total),
       cgst: parseFloat(invoice.cgst),
       sgst: parseFloat(invoice.sgst),
+      igst: parseFloat(invoice.igst),
       grand_total: parseFloat(invoice.grand_total),
 
     };
