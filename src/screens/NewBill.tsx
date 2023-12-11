@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { View, Text, SafeAreaView, StyleSheet,TextInput,TouchableOpacity, ScrollView, Modal } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import colors from '../config/colors';
 import { useState,useEffect } from 'react';
 import {getLastInvoiceNumber} from '../config/supabaseClient';
@@ -20,10 +21,7 @@ import ErrorModal from '../components/errorModal';
   function NewBill({navigation}) {
 
     const [productList, setProductList] = useState([]);
-    
-      
-      
-
+    const [isigst, setIsigst] = useState(false);
     const [invoiceNumber, setInvoiceNumber] = useState('');
     const [date, setDate] = useState(getCurrentDate());
     const [customerName, setCustomerName] = useState('');
@@ -45,11 +43,40 @@ import ErrorModal from '../components/errorModal';
       navigation.navigate('ViewBill', { billId: billId });
     };
 
-    useEffect(() => {
-      fetchInvoiceNumber();
-      fetchList();
 
-    }, []);
+    useEffect(() => {
+        changeGst();
+    },[isigst]);
+
+    async function changeGst() {
+        if(isigst)
+        {
+            let totalTax = parseFloat(cgst)+parseFloat(sgst);
+            setIgst(totalTax.toFixed(2));
+            setSgst('0');
+            setCgst('0');
+            
+        }
+        else
+        {
+            let tax = parseFloat(igst);
+            setSgst((tax/2).toFixed(2));
+            setCgst((tax/2).toFixed(2));
+            setIgst('0');
+        }
+    }
+    async function handleCheckBox() {
+        setIsigst((prevIsigst) => {
+          const newIsigst = !prevIsigst;
+          return newIsigst;
+        });
+      }
+
+      useEffect(() => {
+        fetchInvoiceNumber();
+        fetchList();
+  
+      }, []);
   
     async function fetchInvoiceNumber() {
       const number = await getLastInvoiceNumber();
@@ -170,8 +197,19 @@ import ErrorModal from '../components/errorModal';
             sgst += parseFloat(product.amount) * parseFloat(product.gst) / 200;
         });
         const grand_total = total + cgst + sgst;
-        setCgst(cgst.toFixed(2));
-        setSgst(sgst.toFixed(2));
+        if(!isigst)
+        {
+            setCgst(cgst.toFixed(2));
+            setSgst(sgst.toFixed(2));
+            setIgst('0');
+        }
+        else
+        {
+            setCgst('0');
+            setSgst('0');
+            setIgst(parseFloat(cgst+sgst).toFixed(2));
+        }
+        
         setTotal(total.toFixed(2));
         setGrandTotal(grand_total.toFixed(2));
 
@@ -453,7 +491,7 @@ import ErrorModal from '../components/errorModal';
                     value={sgst}
                     editable={false}
                     />
-                </View>
+                </View>             
                 <View style={styles.inputBox}>
                     <Text style={styles.label}>SGST</Text>
                     <TextInput
@@ -462,7 +500,24 @@ import ErrorModal from '../components/errorModal';
                     editable={false}
                     />
                 </View>
-            
+
+                <View style={styles.inputBox}>
+                    <Text style={styles.label}>IGST</Text>
+                    <TextInput
+                    style={styles.displayBox}
+                    value={igst}
+                    editable={false}
+                    />
+                </View>
+
+            </View>
+            <View style = {styles.row}>
+                <CheckBox
+                    disabled={false}
+                    value={isigst}
+                    onValueChange={handleCheckBox}
+                />
+                <Text style={styles.label}>Is IGST</Text>
             </View>
 
             <View style = {styles.row}>

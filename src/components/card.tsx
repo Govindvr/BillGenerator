@@ -4,7 +4,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MainButton from './mainButton';
 
-const Card = ({ date,customerName,amount,onPressButton }) => {
+const Card = ({ date,customerName,amount,inno,onPressButton }) => {
+  let billtitle =  `View Bill No ${inno}`;
   return (
     <View style={styles.card}>
         <View style={styles.cardText1}>
@@ -15,7 +16,7 @@ const Card = ({ date,customerName,amount,onPressButton }) => {
          <Text style={styles.customerName}>{customerName}</Text>
       </View>
       <View style={styles.cardText2}>
-        <MainButton title="View Bill" onPress={onPressButton} />
+        <MainButton title={billtitle} onPress={onPressButton} />
       </View>
     </View>
   );
@@ -44,6 +45,10 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  inno: {
+    fontSize: 12,
     fontWeight: 'bold',
   },
 
