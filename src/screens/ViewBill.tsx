@@ -48,7 +48,6 @@ function ViewBill({ route }) {
         body: JSON.stringify(req_body),
       });
 
-
       if(response.status != 201)
       {
         console.log(response.status);
@@ -105,6 +104,11 @@ function ViewBill({ route }) {
       <View style={styles.row}> 
         <Text style={styles.label}>SGST:</Text>
         <Text style={styles.text}>{bill.sgst}</Text>
+      </View>
+
+      <View style={styles.row}> 
+        <Text style={styles.label}>IGST:</Text>
+        <Text style={styles.text}>{bill.igst}</Text>
       </View>
 
       <View style={styles.row}> 
