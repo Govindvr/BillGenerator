@@ -5,7 +5,7 @@ import CheckBox from '@react-native-community/checkbox';
 import colors from '../config/colors';
 import { useState,useEffect } from 'react';
 import {getLastInvoiceNumber} from '../config/supabaseClient';
-import { getProducts, saveInvoiceToDb } from '../config/supabaseClient';
+import { getProducts, saveInvoiceToDb,getBill } from '../config/supabaseClient';
 import { Dropdown } from 'react-native-element-dropdown';
 import ErrorModal from '../components/errorModal';
 
@@ -18,8 +18,8 @@ import ErrorModal from '../components/errorModal';
     return `${day}-${month}-${year}`;
   }
   
-  function NewBill({navigation}) {
-
+  function NewBill({navigation, route}) {
+  
     const [productList, setProductList] = useState([]);
     const [isigst, setIsigst] = useState(false);
     const [invoiceNumber, setInvoiceNumber] = useState('');
@@ -37,6 +37,32 @@ import ErrorModal from '../components/errorModal';
     const [grandTotal, setGrandTotal] = useState('0');
 
     const [showErrorModal, setShowErrorModal] = useState(false);
+
+    useEffect(() => {
+        fetchInvoiceNumber();
+        fetchList();
+        if (route.params)
+        {
+            const fetchBillDetails = async() => {
+                console.log("From Bill");
+                const { billId } = route.params;
+                const billDetails = await getBill(billId);
+                if (billDetails) {
+                    console.log(billDetails.bill);
+                    setCustomerName(billDetails.bill.customer_name);
+                    setCustomerGst(billDetails.bill.customer_gst);
+                    setBillingAddress(billDetails.bill.billing_address);
+                    setShippingAddress(billDetails.bill.shipping_address);
+                    setCustomerPhone(billDetails.bill.customer_phone);
+                }
+            }
+            fetchBillDetails();
+        } 
+        else{
+            console.log("From Home");
+        }
+  
+      }, []);
     
     const handleViewBill = (billId) => {
       navigation.replace('ViewOldBills');
@@ -71,12 +97,6 @@ import ErrorModal from '../components/errorModal';
           return newIsigst;
         });
       }
-
-      useEffect(() => {
-        fetchInvoiceNumber();
-        fetchList();
-  
-      }, []);
   
     async function fetchInvoiceNumber() {
       const number = await getLastInvoiceNumber();
@@ -302,6 +322,7 @@ import ErrorModal from '../components/errorModal';
                 value={billingAddress}
                 placeholder='Enter Billing Address'
                 placeholderTextColor= 'black'
+                color= 'black'
                 multiline={true}
                 onChangeText={handleBillingAddressChange}
                 />
@@ -316,6 +337,7 @@ import ErrorModal from '../components/errorModal';
                 style={styles.biginput}
                 value={shippingAddress}
                 placeholderTextColor= 'black'
+                color= 'black'
                 placeholder='Enter Shipping Address'
                 multiline={true}
                 onChangeText={handleShippingAddressChange}

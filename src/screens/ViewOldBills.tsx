@@ -12,6 +12,13 @@ import testServer from '../config/test';
 function ViewOldBills({navigation}) {
       const [showErrorModal, setShowErrorModal] = useState(false);
 
+      async function handleClickText(bill_id,customerName) {
+        // Trigger haptic feedback
+          Vibration.vibrate(20);
+    
+          navigation.navigate('NewBill', { billId: bill_id });
+      }
+
       const handleViewBill = (billId) => {
         navigation.navigate('ViewBill', { billId: billId });
       };
@@ -54,8 +61,8 @@ function ViewOldBills({navigation}) {
                 customerName={item.customer_name}
                 amount={item.grand_total} 
                 inno={item.invoice_number}
+                handleClickText={() => {handleClickText(item.id,item.customer_name)}}
                 onPressButton={() => {handleViewBill(item.id);
-
                 }}/>
         )}
         />
