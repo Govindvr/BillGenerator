@@ -44,11 +44,11 @@ import ErrorModal from '../components/errorModal';
         if (route.params)
         {
             const fetchBillDetails = async() => {
-                console.log("From Bill");
+                // console.log("From Bill");
                 const { billId } = route.params;
                 const billDetails = await getBill(billId);
                 if (billDetails) {
-                    console.log(billDetails.bill);
+                    // console.log(billDetails.bill);
                     setCustomerName(billDetails.bill.customer_name);
                     setCustomerGst(billDetails.bill.customer_gst);
                     setBillingAddress(billDetails.bill.billing_address);
@@ -58,9 +58,9 @@ import ErrorModal from '../components/errorModal';
             }
             fetchBillDetails();
         } 
-        else{
-            console.log("From Home");
-        }
+        // else{
+        //     console.log("From Home");
+        // }
   
       }, []);
     
@@ -196,7 +196,7 @@ import ErrorModal from '../components/errorModal';
           const gstRate = parseFloat(selectedProduct.gst_rate);
           const unitPrice = parseFloat(selectedProduct.unitprice);
 
-          updatedProducts[index].gst_rate = (unitPrice+  unitPrice*(gstRate/(100))).toString(); 
+          updatedProducts[index].gst_rate = (unitPrice+  unitPrice*(gstRate/(100))).toFixed(3).toString(); 
 
           setProducts(updatedProducts);
         }
@@ -719,6 +719,7 @@ const styles = StyleSheet.create({
       inputSearchStyle: {
         height: 40,
         fontSize: 16,
+        color:'black',  
       },
     buttonRow: {
         flexDirection: 'row',
