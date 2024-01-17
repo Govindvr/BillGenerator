@@ -228,5 +228,24 @@ const supabaseKey = EXPO_PUBLIC_ANON_KEY;
 
 
   }
-  export { getLastInvoiceNumber, getBills, getBill, getProducts, saveInvoiceToDb };
+
+  async function deleteInvoice(id) {
+    try{
+      const { error } = await supabase
+        .from('bill')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        console.error('Error deleting invoice:', error);
+        return { "error": error.message};
+      }
+      return { "status": "sucess"};
+    } catch (error) {
+      console.error('Error deleting invoice:', error);
+      return { "error": error.message};
+    }
+  }
+
+  export { getLastInvoiceNumber, getBills, getBill, getProducts, saveInvoiceToDb, deleteInvoice };
   export default supabase;

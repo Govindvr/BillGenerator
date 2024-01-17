@@ -61,6 +61,7 @@ function ViewOldBills({navigation}) {
                 customerName={item.customer_name}
                 amount={item.grand_total} 
                 inno={item.invoice_number}
+                buttontext={"View Bill No"}
                 handleClickText={() => {handleClickText(item.id,item.customer_name)}}
                 onPressButton={() => {handleViewBill(item.id);
                 }}/>
