@@ -78,10 +78,16 @@ android {
         applicationId "com.billgenerator"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "2.2"
     }
     signingConfigs {
+        release {
+            storeFile file('buildapk.keystore')
+            storePassword 'govind'
+            keyAlias 'build'
+            keyPassword 'govind'
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
