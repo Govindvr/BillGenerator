@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply plugin: "org.jetbrains.kotlin.android"
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -73,13 +74,22 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.billgenerator"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    namespace "com.ocbbillgenerator"
     defaultConfig {
-        applicationId "com.billgenerator"
+        applicationId "com.ocbbillgenerator"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
-        versionName "2.2"
+        versionName "2.1.0"
     }
     signingConfigs {
         release {

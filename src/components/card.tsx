@@ -1,86 +1,111 @@
 // @ts-nocheck
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import MainButton from './mainButton';
+import {View, StyleSheet} from 'react-native';
+import {Card, Button, Text} from 'react-native-paper';
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import theme from '../config/theme';
 
-const Card = ({ date,customerName,amount,inno,onPressButton,handleClickText }) => {
-  let billtitle =  `View Bill No ${inno}`;
-  
+const BillCard = ({
+  date,
+  customerName,
+  amount,
+  inno,
+  onPressButton,
+  handleClickText,
+}) => {
   return (
-    <View style={styles.card}>
-        <View style={styles.cardText1}>
-            <Text style={styles.amount}>Amount: ₹{amount}</Text>
-             <Text style={styles.date}>{date}</Text>
-      </View>
-      <View style={styles.cardText2}>
-         <Text style={styles.customerName}>{customerName}</Text>
-      </View>
-      <View style={styles.cardText2}>
-        <MainButton title={billtitle} onPress={onPressButton} />
-      </View>
-      <View style={styles.cardText3}>
-         <Text style={styles.customerLink} onPress={handleClickText}>{"Click to Repeat Customer"}</Text>
-      </View>
-    </View>
+    <Card style={styles.card}>
+      <Card.Content>
+        <View style={styles.headerRow}>
+          <Text style={styles.invoiceLabel}>Invoice #{inno}</Text>
+          <Text style={styles.amount}>₹{amount}</Text>
+        </View>
+        <Text style={styles.date}>{date}</Text>
+
+        <View style={styles.customerRow}>
+          <MaterialIcons
+            name="account"
+            size={20}
+            color={theme.colors.primary}
+          />
+          <Text style={styles.customerName}>{customerName}</Text>
+        </View>
+      </Card.Content>
+
+      <Card.Actions style={styles.cardActions}>
+        <Button
+          mode="text"
+          onPress={handleClickText}
+          labelStyle={styles.repeatButtonLabel}>
+          Repeat Customer
+        </Button>
+        <Button mode="contained" onPress={onPressButton}>
+          View Bill
+        </Button>
+      </Card.Actions>
+    </Card>
+  );
+};
+
+const areEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.date === nextProps.date &&
+    prevProps.customerName === nextProps.customerName &&
+    prevProps.amount === nextProps.amount &&
+    prevProps.inno === nextProps.inno &&
+    prevProps.onPressButton === nextProps.onPressButton &&
+    prevProps.handleClickText === nextProps.handleClickText
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#c5edeb',
-    borderRadius: 20,
-    padding: 20,
-    paddingBottom: 0,
-    marginBottom: 8,
-    elevation: 3, // for shadow on Android
-    shadowColor: '#000', // for shadow on iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+    marginBottom: 12,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.outlineVariant,
   },
-  date: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  customerName: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  inno: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  customerLink: {
-    fontSize: 11,
-    marginBottom: 8,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
-  
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  cardText1: {
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
-  cardText2: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  invoiceLabel: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: theme.colors.primary,
   },
-  cardText3: {
+  amount: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: theme.colors.primary,
+  },
+  date: {
+    fontSize: 12,
+    color: theme.colors.onSurfaceVariant,
+    marginBottom: 8,
+  },
+  customerRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 8,
+    alignItems: 'center',
+    gap: 8,
+  },
+  customerName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.onBackground,
+    flex: 1,
+  },
+  cardActions: {
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    justifyContent: 'space-between',
+  },
+  repeatButtonLabel: {
+    fontSize: 12,
   },
 });
 
-export default Card;
+export default React.memo(BillCard, areEqual);

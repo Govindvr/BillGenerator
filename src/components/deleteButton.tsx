@@ -1,48 +1,40 @@
 // @ts-nocheck
 
 import React from 'react';
-import { TouchableHighlight, Vibration, Text, StyleSheet } from 'react-native';
-import colors from '../config/colors';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {Vibration, StyleSheet} from 'react-native';
+import {Button} from 'react-native-paper';
+import theme from '../config/theme';
 
+const DeleteButton = ({onPress, title}) => {
+  const handlePress = () => {
+    // Trigger haptic feedback
+    Vibration.vibrate(100);
+    // Call the provided onPress function
+    onPress();
+  };
 
-const DeleteButton = ({ onPress, title }) => {
-    const handlePress = () => {
-        // Trigger haptic feedback
-        Vibration.vibrate(100);
-    
-        // Call the provided onPress function
-        onPress();
-      };
-    return (
-        <TouchableHighlight
-        onPress={handlePress}
-        style={styles.button}
-        >
-        
-        <Text style={styles.buttonText}><Icon
-          name="delete"
-          size={15}
-          colour="#fff"
-          />{title}</Text>
-        </TouchableHighlight>
-    );
+  return (
+    <Button
+      mode="contained"
+      onPress={handlePress}
+      style={styles.button}
+      labelStyle={styles.buttonLabel}
+      icon="delete"
+      buttonColor={theme.colors.error}>
+      {title}
+    </Button>
+  );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'red',
-    borderRadius: 25,
-    padding: 15,
-    height: 50,
-    width: 200,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginVertical: 8,
+    borderRadius: 8,
+    paddingVertical: 6,
   },
-  buttonText: {
-    color: 'white',
+  buttonLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
 

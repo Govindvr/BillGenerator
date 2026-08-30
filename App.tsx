@@ -7,60 +7,91 @@
 // @ts-nocheck
 import 'react-native-gesture-handler';
 import React from 'react';
-import { NavigationContainer,useNavigation,DrawerActions } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  NavigationContainer,
+  useNavigation,
+  DrawerActions,
+} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Provider as PaperProvider} from 'react-native-paper';
+import theme from './src/config/theme';
 import HomeScreen from './src/screens/HomeScreen';
 import NewBill from './src/screens/NewBill';
 import ViewOldBills from './src/screens/ViewOldBills';
 import ViewBill from './src/screens/ViewBill';
 import BillEditor from './src/screens/BillEditor';
+import SupplierSettings from './src/screens/SupplierSettings';
+import CustomerManagement from './src/screens/CustomerManagement';
+import ProductManagement from './src/screens/ProductManagement';
 import Icon from 'react-native-vector-icons/Entypo';
-import { LogBox } from 'react-native';
+import {LogBox} from 'react-native';
 
 LogBox.ignoreLogs(['Reanimated 2']);
 
-const StackNav = ()=>{
+const StackNav = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
-  return(
-    <Stack.Navigator screenOptions={{
-      headerLeft: () =>{
-        return(
-          <Icon
-          name="menu"
-          onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}
-          size={30}
-          colour="#fff"
-          />
-        );
-      }
-    }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="NewBill" component={NewBill} />
-        <Stack.Screen name="ViewOldBills" component={ViewOldBills} />
-        <Stack.Screen name="ViewBill" component={ViewBill} />
-      </Stack.Navigator>
-  )
-}
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerLeft: () => {
+          return (
+            <Icon
+              name="menu"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={30}
+              colour="#fff"
+            />
+          );
+        },
+      }}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="NewBill" component={NewBill} />
+      <Stack.Screen name="ViewOldBills" component={ViewOldBills} />
+      <Stack.Screen name="ViewBill" component={ViewBill} />
+    </Stack.Navigator>
+  );
+};
 
-const DrawerNav = ()=>{
+const DrawerNav = () => {
   const Drawer = createDrawerNavigator();
-  return(
-    <Drawer.Navigator screenOptions={{
-      headerShown: false
-    }}>
-        <Drawer.Screen name="Home " component={StackNav} />
-        <Drawer.Screen name="BillEditor" component={BillEditor} options={{ headerShown: true }}/>
-      </Drawer.Navigator>
-  )
-
-}
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Drawer.Screen name="Home " component={StackNav} />
+      <Drawer.Screen
+        name="BillEditor"
+        component={BillEditor}
+        options={{headerShown: true}}
+      />
+      <Drawer.Screen
+        name="CustomerManagement"
+        component={CustomerManagement}
+        options={{headerShown: true, title: 'Customers'}}
+      />
+      <Drawer.Screen
+        name="ProductManagement"
+        component={ProductManagement}
+        options={{headerShown: true, title: 'Products'}}
+      />
+      <Drawer.Screen
+        name="SupplierSettings"
+        component={SupplierSettings}
+        options={{headerShown: true, title: 'Business Settings'}}
+      />
+    </Drawer.Navigator>
+  );
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <DrawerNav/>
-    </NavigationContainer>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <DrawerNav />
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
