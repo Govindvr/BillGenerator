@@ -1,6 +1,8 @@
+import {Share} from 'react-native';
 import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
 import QRCode from 'qrcode';
+import RNShare from 'react-native-share';
 import {
   TextEncoder as RNTextEncoder,
   TextDecoder as RNTextDecoder,
@@ -549,8 +551,33 @@ export async function getSavedInvoicePdfPath(
 }
 
 export async function openSavedInvoicePdf(filePath: string): Promise<void> {
+  // FileViewer requires an absolute path WITHOUT file://
   const normalizedPath = filePath.startsWith('file://')
     ? filePath.replace(/^file:\/\//, '')
     : filePath;
-  await FileViewer.open(normalizedPath);
+
+  try {
+    // 1. ADD showOpenWithDialog to prevent immediate MIME crashes on Android
+    await FileViewer.open(normalizedPath, { showOpenWithDialog: true });
+    return;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!message.toLowerCase().includes('mime type') && !message.toLowerCase().includes('no app associated')) {
+      throw error;
+    }
+  }
+
+  try {
+    // 2. Use react-native-share, which natively supports Android file intents
+    // This requires the file:// prefix to work correctly
+    await RNShare.open({
+      title: 'Invoice PDF',
+      message: 'Open the generated invoice PDF.',
+      url: `file://${normalizedPath}`, 
+      type: 'application/pdf', 
+    });
+  } catch (shareError) {
+    console.warn('Unable to open or share invoice PDF:', shareError);
+    throw shareError;
+  }
 }

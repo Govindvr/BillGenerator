@@ -1,3 +1,7 @@
+jest.mock('react-native', () => ({
+  Share: {share: jest.fn()},
+}));
+
 jest.mock('react-native-fs', () => ({
   DocumentDirectoryPath: '/tmp/documents',
   DownloadDirectoryPath: '/tmp/downloads',
@@ -28,6 +32,7 @@ jest.mock('react-native-html-to-pdf', () => ({
 const {
   matchesInvoicePdfFilename,
   generateInvoicePdfFromBill,
+  openSavedInvoicePdf,
 } = require('../src/config/invoicePdf');
 const {
   formatInvoiceNumber,
@@ -35,6 +40,8 @@ const {
   normalizeInvoiceNumber,
 } = require('../src/config/invoiceNumber');
 const RNFS = require('react-native-fs');
+const {Share} = require('react-native');
+const FileViewer = require('react-native-file-viewer').default;
 const QRCode = require('qrcode').default;
 const RNHTMLtoPDF = require('react-native-html-to-pdf');
 
@@ -71,6 +78,31 @@ describe('matchesInvoicePdfFilename', () => {
     ).toBe(false);
     expect(matchesInvoicePdfFilename('invoice_12_05-06-2026.pdf', 123)).toBe(
       false,
+    );
+  });
+});
+
+describe('openSavedInvoicePdf', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('falls back to sharing when no PDF app is associated with the file type', async () => {
+    FileViewer.open.mockRejectedValue(new Error('No app associated with this mime type'));
+    Share.share.mockResolvedValue({action: 'shared'});
+
+    await expect(
+      openSavedInvoicePdf('/tmp/documents/invoices/invoice_test.pdf'),
+    ).resolves.toBeUndefined();
+
+    expect(FileViewer.open).toHaveBeenCalledWith(
+      '/tmp/documents/invoices/invoice_test.pdf',
+    );
+    expect(Share.share).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Invoice PDF',
+        url: 'file:///tmp/documents/invoices/invoice_test.pdf',
+      }),
     );
   });
 });

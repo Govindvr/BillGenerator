@@ -120,54 +120,7 @@ function ViewBill({route, navigation}) {
       await openSavedInvoicePdf(filePath);
     } catch (error) {
       console.error('Error exporting bill:', error);
-
-      try {
-        const lines = billItems.map((item, index) => {
-          const qty = item.quantity ?? 0;
-          const unit = item.unit || '';
-          const rate = item.price_incl_gst ?? item.unitprice ?? 0;
-          const amount = item.item_total_incl_gst ?? item.item_total ?? 0;
-          return `${index + 1}. ${item.product_name} | HSN ${
-            item.hsn_sac
-          } | ${qty} ${unit} x ${formatCurrency(rate)} = ${formatCurrency(
-            amount,
-          )}`;
-        });
-
-        const invoiceText = [
-          billType,
-          `Invoice #${bill.invoice_number}`,
-          `Date: ${bill.date}`,
-          `FY: ${bill.financial_year_start}`,
-          '',
-          `Supplier: ${supplierConfig?.legal_business_name || '-'}`,
-          `Supplier GSTIN: ${supplierConfig?.gstin || '-'}`,
-          `Customer: ${bill.customer_name || '-'}`,
-          `Customer GSTIN: ${bill.customer_gstin || '-'}`,
-          `Place of Supply: ${placeOfSupplyStateName}`,
-          `Tax Type: ${isIgst ? 'IGST' : 'CGST + SGST'}`,
-          '',
-          'Items:',
-          ...lines,
-          '',
-          `Total (Excl. GST): ${formatCurrency(totalExclGst)}`,
-          ...(isIgst
-            ? [`IGST: ${formatCurrency(igstTotal)}`]
-            : [
-                `CGST: ${formatCurrency(cgstTotal)}`,
-                `SGST: ${formatCurrency(sgstTotal)}`,
-              ]),
-          `Grand Total: ${formatCurrency(totalInclGst)}`,
-        ].join('\n');
-
-        await Share.share({
-          title: `Invoice_${bill.invoice_number}`,
-          message: invoiceText,
-        });
-      } catch (shareError) {
-        console.error('Error sharing bill text fallback:', shareError);
-        Alert.alert('Export failed', 'Unable to export invoice right now.');
-      }
+      Alert.alert('Export failed', 'Unable to export invoice right now.');
     } finally {
       setExporting(false);
     }
@@ -442,14 +395,14 @@ function ViewBill({route, navigation}) {
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>
-          <Button
+          {/* <Button
             mode="text"
             onPress={handleBillThisCustomer}
             compact
             labelStyle={styles.smallActionLabel}
             style={styles.smallActionButton}>
             Bill this customer
-          </Button>
+          </Button> */}
           <Button
             mode="outlined"
             onPress={() => navigation.goBack()}
