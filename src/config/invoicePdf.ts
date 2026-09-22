@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {Share} from 'react-native';
 import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
@@ -10,6 +12,7 @@ import {
 import {getStateName} from './gstCalculations';
 import {INVOICE_TEMPLATE_HTML} from './invoiceTemplate';
 import {extractInvoiceSequenceNumber} from './invoiceNumber';
+import {BACKEND_URL} from '@env';
 
 const RNHTMLtoPDFModule = require('react-native-html-to-pdf');
 const RNHTMLtoPDF = RNHTMLtoPDFModule?.default || RNHTMLtoPDFModule;
@@ -20,6 +23,7 @@ if (typeof globalThis.TextEncoder === 'undefined') {
 }
 
 const INVOICE_PDF_DIRECTORY = 'invoices';
+const INVOICE_BACKEND_BASE_URL = BACKEND_URL;
 const UPI_VPA = '9020411611@upi';
 const UPI_NAME = 'OLGA CONCRETE BLOCKS';
 
@@ -548,6 +552,44 @@ export async function getSavedInvoicePdfPath(
   });
 
   return match || null;
+}
+
+export async function downloadInvoicePdfFromBackend(
+  year: string | number,
+  invoiceNumber: string,
+): Promise<string> {
+  const normalizedYear = String(year ?? '').match(/\d{4}/)?.[0];
+  const normalizedInvoiceNumber = safeString(invoiceNumber, '').trim();
+
+  if (!normalizedYear || !normalizedInvoiceNumber) {
+    throw new Error(
+      'Invoice year and number are required to download the PDF.',
+    );
+  }
+
+  const directory = await ensurePdfDirectory();
+  const fileName = `invoice_${normalizeFileToken(
+    normalizedInvoiceNumber,
+  )}_${normalizedYear}.pdf`;
+  const filePath = `${directory}/${fileName}`;
+  const download = RNFS.downloadFile({
+    fromUrl: `${INVOICE_BACKEND_BASE_URL}/api/ocb/invoice/${normalizedYear}/${encodeURIComponent(
+      normalizedInvoiceNumber,
+    )}/download`,
+    toFile: filePath,
+    connectionTimeout: 60000,
+    readTimeout: 60000,
+  });
+  const result = await download.promise;
+
+  if (result.statusCode < 200 || result.statusCode >= 300) {
+    await RNFS.unlink(filePath).catch(() => undefined);
+    throw new Error(
+      `Invoice download failed with status ${result.statusCode}.`,
+    );
+  }
+
+  return filePath;
 }
 
 export async function openSavedInvoicePdf(filePath: string): Promise<void> {

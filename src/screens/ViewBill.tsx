@@ -16,7 +16,7 @@ import theme from '../config/theme';
 import {getBillUpdated, getSupplierConfig} from '../config/supabaseClient';
 import {formatCurrency, getStateName} from '../config/gstCalculations';
 import {
-  generateInvoicePdfFromBill,
+  downloadInvoicePdfFromBackend,
   getSavedInvoicePdfPath,
   openSavedInvoicePdf,
 } from '../config/invoicePdf';
@@ -98,23 +98,11 @@ function ViewBill({route, navigation}) {
     try {
       let filePath = await getSavedInvoicePdfPath(bill.invoice_number);
 
-      if (!filePath) {
-        const pdfResult = await generateInvoicePdfFromBill({
-          bill,
-          supplierConfig,
-          billItems,
-        });
-        filePath = pdfResult.filePath;
-      } else {
-        const fileExists = await RNFS.exists(filePath);
-        if (!fileExists) {
-          const pdfResult = await generateInvoicePdfFromBill({
-            bill,
-            supplierConfig,
-            billItems,
-          });
-          filePath = pdfResult.filePath;
-        }
+      if (!filePath || !(await RNFS.exists(filePath))) {
+        filePath = await downloadInvoicePdfFromBackend(
+          bill.financial_year_start,
+          bill.invoice_number,
+        );
       }
 
       await openSavedInvoicePdf(filePath);
